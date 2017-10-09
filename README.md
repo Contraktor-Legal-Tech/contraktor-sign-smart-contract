@@ -1,8 +1,13 @@
 # Contraktor Sign Smart Contract
 
-Contraktor Sign is a smart contract designed to be used by Contraktor Platform and Contraktor costumers, the intent of this smart contract is to provide to the users a tool to bound a digital paper contract (PDF) and sign the contract by leveraging the technology of Ethereum blockchain to add the proof ownership and proof of a digital paper contract to be signed by all parties.
+Contraktor Sign is a smart contract designed to be used by Contraktor Platform and Contraktor costumers.
+It's inteded to provide a tool to the users to bound a digital paper contract (PDF) and sign the contract by leveraging the Ethereum blockchain technology for ownership proof to be signed by all parties.
 
-The Contraktor Sign allow any user account in the Ethereum blockchain to sign a digital paper contract (PDF), since that accounts or parties to be added to the digital contract list of parties too in the Contraktor Sign.
+The Contraktor Sign allows any user account in the Ethereum blockchain to sign a digital paper contract (PDF), adding them to the list of parties involved in the document.
 
-The digital paper document which specifies the contract will pass by an checksum hash generation which will be added in the Contraktor Sign allowing to be added as valid document to a sign process in the Ethereum blockchain and any time all parties can validate the participation in the contract by check the parties signed in the Contraktor Sign and checking the valid checksum for the digital document which should be the same checksum added in the Contraktor Sign Digital Contract.
-
+The process works as follows:
+ - A hash will be generated from the document (PDF)
+ - The hash will be available to be added as a valid document to a signing process
+ - The involved parties will be allowed validate the document through the hash
+ - The involved parties will be allowed to validate the participation in the contract
+ - The involved parties will be allowed to sign the contract
