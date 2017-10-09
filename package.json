@@ -1,0 +1,24 @@
+{
+  "name": "contraktor-sign-smart-contract",
+  "version": "1.0.0",
+  "description": "Contraktor smart contract to sign documents using Ethereum.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "init": "truffle init",
+    "console": "truffle console",
+    "testrpc": "testrpc",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "inspect": "node --inspect --debug-brk npm run test",
+    "test": "truffle test"
+  },
+  "author": "Contraktor Legal Tech",
+  "license": "All Rights Reserved",
+  "devDependencies": {
+    "ethereumjs-testrpc": "^4.1.3",
+    "truffle": "^3.4.11"
+  }
+}
