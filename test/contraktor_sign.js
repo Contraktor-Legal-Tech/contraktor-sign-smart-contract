@@ -6,6 +6,7 @@ contract('ContraktorSign', accounts => {
   const contractHash = '42bcb1227d9b3e7efb7574a372639cadcdf7f247da7a580c7a34f3422956b9ee';
   const account_1 = accounts[1];
   const account_2 = accounts[2];
+  const account_3 = accounts[3];
   const othersAccounts = [account_1, account_2];
 
   const deployContraktorSign = () => (
@@ -80,8 +81,19 @@ contract('ContraktorSign', accounts => {
     return deployContraktorSignDigitalContractWithSigners().then(instance => {
       return instance.signDigitalContract(contractHash, { from: account_1 }).then(() => {
         return instance.signDigitalContract(contractHash, { from: account_2 });
+      }).then(() => {
+        return instance.isContractSignedBySigner.call(contractHash, account_1).then(result => {
+          assert(result, true, `Contract not signed by account ${account_1}`);
+        }).then(() => {
+          return instance.isContractSignedBySigner.call(contractHash, account_3).then(result => {
+            assert(result, false, `Contract signed by account ${account_3} is invalid`);
+          }).then(() => { throw "It should give an error"; })
+          .catch(err => {
+            assert.equal(err instanceof(Error), true);
+          });
+        });
       });
-    });
+    })
   });
 
   it('shouldn\'t sign a canceled digital contract', () => {
@@ -119,6 +131,32 @@ contract('ContraktorSign', accounts => {
     .then(() => { throw "It should give an error"; })
     .catch(err => {
       assert.equal(err instanceof(Error), true, "Should give an error due the contract already signed");
+    });
+  });
+
+  it('should confirm that a signer is participating in a contract', () => {
+    return deployContraktorSignDigitalContractWithSigners().then(instance => {
+      return instance.signDigitalContract(contractHash, { from: account_1 }).then(() => {
+        return instance.signDigitalContract(contractHash, { from: account_2 });
+      }).then(() => {
+        return instance.signerIsValid(contractHash, account_1, { from: account_2 });
+      });
+    }).then(result => {
+      const SignerIsValid = result.logs.find(log => log.event === 'SignerIsValid');
+      assert.equal(SignerIsValid.args._valid, true, "Signer should be valid for the contract");
+    });
+  });
+
+  it('should confirm that a signer isn\t participating in a contract', () => {
+    return deployContraktorSignDigitalContractWithSigners().then(instance => {
+      return instance.signDigitalContract(contractHash, { from: account_1 }).then(() => {
+        return instance.signDigitalContract(contractHash, { from: account_2 });
+      }).then(() => {
+        return instance.signerIsValid(contractHash, account_3, { from: account_2 });
+      });
+    }).then(result => {
+      const SignerIsValid = result.logs.find(log => log.event === 'SignerIsValid');
+      assert.equal(SignerIsValid.args._valid, false, "Signer should be invalid for the contract");
     });
   });
 });

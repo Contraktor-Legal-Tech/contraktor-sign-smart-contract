@@ -45,6 +45,12 @@ contract ContraktorSign is Ownable, Terminable {
     address _ownerAddr
   );
 
+  event SignerIsValid(
+    bytes _documentHash,
+    address _signer,
+    bool _valid
+  );
+
   /*
   *  Core functions
   */
@@ -91,6 +97,17 @@ contract ContraktorSign is Ownable, Terminable {
     DigitalContractSigned(_documentHash, msg.sender);
   }
 
+  /**
+   * @dev checks if the signer is participating in an contract
+   * @param _documentHash checksum of the document to be checked
+   * @param _signer account to be test if is a valid signer in the contract specified
+   */
+  function signerIsValid(bytes _documentHash, address _signer) {
+    require(contracts[_documentHash] != address(0x0));
+    var isValid = contracts[_documentHash].signerIsValid(_signer);
+    SignerIsValid(_documentHash, _signer, isValid);
+  }
+
   /*
    * Getters
    */
@@ -123,5 +140,15 @@ contract ContraktorSign is Ownable, Terminable {
   function contractSignedTime(bytes _documentHash) constant returns (uint) {
     require(contracts[_documentHash] != address(0x0));
     return contracts[_documentHash].completedAt();
+  }
+
+  /**
+   * @dev returns if the given signer already signed
+   * @param _documentHash checksum of the document to check
+   * @return boolean indicating if the signer already signed
+   */
+  function isContractSignedBySigner(bytes _documentHash, address _signer) constant returns (bool) {
+    require(contracts[_documentHash] != address(0x0));
+    return contracts[_documentHash].signerSigned(_signer);
   }
 }

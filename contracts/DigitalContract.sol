@@ -53,6 +53,10 @@ contract DigitalContract is Ownable {
   }
 
   /**
+   * Core functions
+   */
+
+  /**
    * @dev adds signers to this smart contract
    * @param _signersAddr array which contains the public address of the signers
    */
@@ -129,5 +133,30 @@ contract DigitalContract is Ownable {
     if (signerCount == signerList.length) {
       completedAt = block.timestamp;
     }
+  }
+
+  /**
+   * Getters
+   */
+
+  /**
+   * @dev checks if a signer is valid for an contract
+   * @param _signerAddr address to check if it belongs to the contract as signer
+   * @return boolean value indicating the presense of the signer in the contract
+   */
+  function signerIsValid(address _signerAddr) onlyOwner constant returns (bool) {
+    require(_signerAddr != 0x0);
+    return (signers[_signerAddr] != address(0x0));
+  }
+
+  /**
+   * @dev checks if a signer already signed
+   * @param _signerAddr address to check if signer signed
+   * @return boolean value indicating if the signer signed
+   */
+  function signerSigned(address _signerAddr) constant returns (bool) {
+    require(_signerAddr != 0x0);
+    require(signers[_signerAddr] != address(0x0));
+    return signers[_signerAddr].isSigned();
   }
 }
