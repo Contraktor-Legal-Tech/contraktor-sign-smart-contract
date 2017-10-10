@@ -1,0 +1,92 @@
+{
+  "contract_name": "Signer",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "signedAt",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "signer",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "sign",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isSigned",
+      "outputs": [
+        {
+          "name": "signed",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_signer",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b604051602080610282833981016040528080519150505b5b60008054600160a060020a03191633600160a060020a03161790555b60018054600160a060020a031916600160a060020a0383161790555b505b610212806100706000396000f300606060405236156100755763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306adb7d3811461007a578063238ac9331461009f5780632ca15122146100ce5780638da5cb5b146100e3578063e66a6b2214610112578063f2fde38b14610139575b600080fd5b341561008557600080fd5b61008d61015a565b60405190815260200160405180910390f35b34156100aa57600080fd5b6100b2610160565b604051600160a060020a03909116815260200160405180910390f35b34156100d957600080fd5b6100e161016f565b005b34156100ee57600080fd5b6100b2610176565b604051600160a060020a03909116815260200160405180910390f35b341561011d57600080fd5b610125610185565b604051901515815260200160405180910390f35b341561014457600080fd5b6100e1600160a060020a036004351661018e565b005b60025481565b600154600160a060020a031681565b426002555b565b600054600160a060020a031681565b60025415155b90565b60005433600160a060020a039081169116146101a957600080fd5b600160a060020a038116156101e1576000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b5b505600a165627a7a72305820c72547c8c22e987b0113b2b8cc3895a0bf0abf78764154564cd2a6b13c2598d80029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1507612174427
+}
