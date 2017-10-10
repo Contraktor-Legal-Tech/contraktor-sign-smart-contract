@@ -1,6 +1,6 @@
 # Contraktor Sign Smart Contract
 
-**Contraktor Sign** is a smart contract designed to be used by [**Contraktor Platform**](www.contraktor.com.br).
+**Contraktor Sign** is a smart contract designed to be used by [**Contraktor Platform**](https://www.contraktor.com.br).
 
 It's intended to provide a tool for users to bound any digital paper contract (PDF) and add parties to sign it as any "real world" contract.
 
