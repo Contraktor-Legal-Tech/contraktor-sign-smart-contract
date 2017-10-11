@@ -4,9 +4,9 @@
 
 pragma solidity ^0.4.4;
 
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'zeppelin-solidity/contracts/lifecycle/Destructible.sol';
 import "./DigitalContract.sol";
-import "./base/Ownable.sol";
-import "./base/Terminable.sol";
 
 /*
  * @title ContraktorSign
@@ -14,7 +14,7 @@ import "./base/Terminable.sol";
  * it has the ownership to add new contracts, add new signers and let the signers
  * to sign a particular document by the checksum hash of the document
  */
-contract ContraktorSign is Ownable, Terminable {
+contract ContraktorSign is Ownable, Destructible {
   string constant public VERSION = "1.0.0";
   string constant public NAME = "ContraktorSign";
 

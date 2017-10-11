@@ -4,7 +4,7 @@
 
 pragma solidity ^0.4.4;
 
-import "./base/Ownable.sol";
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
 /*
  * @title Signer
