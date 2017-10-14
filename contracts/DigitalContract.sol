@@ -16,9 +16,9 @@ contract DigitalContract is Ownable {
   // Error codes
   enum Errors {
     CONTRACT_COMPLETED, // Contract is completed with all signatures
-    CONTRACT_CANCELED, // Contract is canceld and cannot be used anymore
-    INVALID_SIGNER,    // Invalid signer added
-    SIGNER_SIGNED      // Signer already signed the contract
+    CONTRACT_CANCELED,  // Contract is canceld and cannot be used anymore
+    INVALID_SIGNER,     // Invalid signer added
+    SIGNER_SIGNED       // Signer already signed the contract
   }
 
   // All signers of this contract
