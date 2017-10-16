@@ -76,7 +76,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @dev cancel a digital contract forever
    * @param _documentHash checksum of the document to be canceled
    */
-  function cancelDigitalContract(string _documentHash) public  onlyOwner {
+  function cancelDigitalContract(string _documentHash) public onlyOwner {
     require(contracts[_documentHash] != address(0x0));
     contracts[_documentHash].cancel();
     DigitalContractCanceled(_documentHash, msg.sender);
@@ -86,7 +86,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @dev account can sign the digital contract by the contract hash
    * @param _documentHash checksum of the document to be signed
    */
-  function signDigitalContract(string _documentHash) public  {
+  function signDigitalContract(string _documentHash) public {
     require(contracts[_documentHash] != address(0x0));
     contracts[_documentHash].sign(msg.sender);
     DigitalContractSigned(_documentHash, msg.sender);
@@ -97,7 +97,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @param _documentHash checksum of the document to be checked
    * @param _signer account to be test if is a valid signer in the contract specified
    */
-  function signerIsValid(string _documentHash, address _signer) public  {
+  function signerIsValid(string _documentHash, address _signer) public {
     require(contracts[_documentHash] != address(0x0));
     var isValid = contracts[_documentHash].signerIsValid(_signer);
     SignerIsValid(_documentHash, _signer, isValid);
