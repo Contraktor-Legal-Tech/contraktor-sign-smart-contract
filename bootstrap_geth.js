@@ -9,7 +9,7 @@ console.log(eth.accounts[0]);
 miner.start();
 
 eth.accounts.forEach(function (account) {
-  personal.unlockAccount(account, "super-secure-passwd", 150000);
+  personal.unlockAccount(account, "super-secure-passwd", 0);
 });
 
 [1, 2, 3].forEach(function (v) {
