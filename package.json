@@ -11,7 +11,7 @@
     "truffle": "truffle",
     "console": "truffle console",
     "testrpc": "testrpc -d -m 1 --debug",
-    "dev-chain": "geth --dev --rpc --rpcport 8545 --rpcapi=\"db,eth,net,web3,personal,miner\" --datadir \"dev-chain\" console",
+    "dev-chain": "geth --dev --gasprice 0 --rpc --rpcport 8545 --rpcapi=\"db,eth,net,web3,personal,miner\" --datadir \"dev-chain\" --preload bootstrap_geth.js console",
     "compile": "truffle compile",
     "migrate": "truffle migrate",
     "test": "NODE_ENV=test TEST_TYPE=contract truffle test",
