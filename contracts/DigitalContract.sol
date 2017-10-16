@@ -28,7 +28,7 @@ contract DigitalContract is Ownable {
   Signer[] public signerList;
 
   // the unique identifier of the document
-  bytes documentHash;
+  string documentHash;
 
   // variables to control the state of the digital contract
   uint public createdAt;
@@ -39,13 +39,13 @@ contract DigitalContract is Ownable {
    * Events
    */
 
-  event LogError(uint8 _errorId, bytes _documentHash);
+  event LogError(uint8 _errorId, string _documentHash);
 
   /**
    * @dev adds a new digital contract
    * @param _documentHash checksum of the document to be added to this smart contract
    */
-  function DigitalContract(bytes _documentHash) {
+  function DigitalContract(string _documentHash) {
     documentHash = _documentHash;
 
     // Marks the hour of creation using bloch time

@@ -19,34 +19,34 @@ contract ContraktorSign is Ownable, Destructible {
   string constant public NAME = "ContraktorSign";
 
   // All digital contracts managed by Contraktor
-  mapping(bytes => DigitalContract) contracts;
+  mapping(string => DigitalContract) contracts;
 
   /*
   *  Events
   */
 
   event DigitalContractAdded(
-    bytes _documentHash,
+    string _documentHash,
     address _ownerAddr
   );
 
   event SignersAdded(
-    bytes _documentHash,
+    string _documentHash,
     address[] _signers
   );
 
   event DigitalContractSigned(
-    bytes _documentHash,
+    string _documentHash,
     address _signer
   );
 
   event DigitalContractCanceled(
-    bytes _documentHash,
+    string _documentHash,
     address _ownerAddr
   );
 
   event SignerIsValid(
-    bytes _documentHash,
+    string _documentHash,
     address _signer,
     bool _valid
   );
@@ -56,23 +56,18 @@ contract ContraktorSign is Ownable, Destructible {
   */
 
   /**
-   * @dev creates a new digital contract with checksum hash
-   * @param _documentHash checksum of the document to be added
-   */
-  function newDigitalContract(bytes _documentHash) onlyOwner {
+  * @dev creates a new digital contract with checksum hash and add signers
+  * @param _documentHash checksum of the document to be added
+  * @param _signers address of the accounts to sign the digital contract
+  */
+  function newDigitalContract(string _documentHash, address[] _signers) public onlyOwner {
+    require(contracts[_documentHash] == address(0x0));
+    require(_signers.length > 0);
+
     var ckDigitalContract = new DigitalContract(_documentHash);
     contracts[_documentHash] = ckDigitalContract;
     DigitalContractAdded(_documentHash, ckDigitalContract.owner());
-  }
 
-  /**
-   * @dev add accounts to sign the digital contract
-   * @param _documentHash checksum of the document to add the signers
-   * @param _signers address of the accounts to sign the digital contract
-   */
-  function addSigners(bytes _documentHash, address[] _signers) onlyOwner {
-    require(contracts[_documentHash] != address(0x0));
-    require(_signers.length > 0);
     contracts[_documentHash].addSigners(_signers);
     SignersAdded(_documentHash, _signers);
   }
@@ -81,7 +76,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @dev cancel a digital contract forever
    * @param _documentHash checksum of the document to be canceled
    */
-  function cancelDigitalContract(bytes _documentHash) onlyOwner {
+  function cancelDigitalContract(string _documentHash) public  onlyOwner {
     require(contracts[_documentHash] != address(0x0));
     contracts[_documentHash].cancel();
     DigitalContractCanceled(_documentHash, msg.sender);
@@ -91,7 +86,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @dev account can sign the digital contract by the contract hash
    * @param _documentHash checksum of the document to be signed
    */
-  function signDigitalContract(bytes _documentHash) {
+  function signDigitalContract(string _documentHash) public  {
     require(contracts[_documentHash] != address(0x0));
     contracts[_documentHash].sign(msg.sender);
     DigitalContractSigned(_documentHash, msg.sender);
@@ -102,7 +97,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @param _documentHash checksum of the document to be checked
    * @param _signer account to be test if is a valid signer in the contract specified
    */
-  function signerIsValid(bytes _documentHash, address _signer) {
+  function signerIsValid(string _documentHash, address _signer) public  {
     require(contracts[_documentHash] != address(0x0));
     var isValid = contracts[_documentHash].signerIsValid(_signer);
     SignerIsValid(_documentHash, _signer, isValid);
@@ -117,7 +112,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @param _documentHash checksum of the document to check if is signed
    * @return boolean indicating if the contract is signed
    */
-  function contractIsCompleted(bytes _documentHash) constant returns (bool) {
+  function contractIsCompleted(string _documentHash) constant returns (bool) {
     require(contracts[_documentHash] != address(0x0));
     return contracts[_documentHash].completedAt() != 0;
   }
@@ -127,7 +122,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @param _documentHash checksum of the document to check if is canceled
    * @return boolean indicating if the contract is canceled
    */
-  function contractIsCanceled(bytes _documentHash) constant returns (bool) {
+  function contractIsCanceled(string _documentHash) constant returns (bool) {
     require(contracts[_documentHash] != address(0x0));
     return contracts[_documentHash].canceledAt() != 0;
   }
@@ -137,7 +132,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @param _documentHash checksum of the document to check the timestamp of completion
    * @return uint with the unix timestamp of the completion of the document
    */
-  function contractSignedTime(bytes _documentHash) constant returns (uint) {
+  function contractSignedTime(string _documentHash) constant returns (uint) {
     require(contracts[_documentHash] != address(0x0));
     return contracts[_documentHash].completedAt();
   }
@@ -147,7 +142,7 @@ contract ContraktorSign is Ownable, Destructible {
    * @param _documentHash checksum of the document to check
    * @return boolean indicating if the signer already signed
    */
-  function isContractSignedBySigner(bytes _documentHash, address _signer) constant returns (bool) {
+  function isContractSignedBySigner(string _documentHash, address _signer) constant returns (bool) {
     require(contracts[_documentHash] != address(0x0));
     return contracts[_documentHash].signerSigned(_signer);
   }
