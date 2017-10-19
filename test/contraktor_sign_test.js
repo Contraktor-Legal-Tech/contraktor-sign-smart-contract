@@ -36,7 +36,6 @@ contract('ContraktorSign', accounts => {
     const instance = await ContraktorSign.deployed();
     const transactionResult = await instance.newDigitalContract(documentHash, othersAccounts);
     const newDigitalContractFound = transactionResult.logs.find(log => log.event === 'DigitalContractAdded');
-    assert.equal(newDigitalContractFound.args._ownerAddr === instance.address, true);
     assert.equal(!!newDigitalContractFound, true, "New DigitalContract isn't executed");
   });
 
@@ -59,6 +58,8 @@ contract('ContraktorSign', accounts => {
     await instance.signDigitalContract(documentHash, { from: account_2 });
     const isContractSignedByAccount1 = await instance.isContractSignedBySigner.call(documentHash, account_1)
     assert(isContractSignedByAccount1, true, `Contract not signed by account ${account_1}`);
+    const isContractSignedByAccount2 = await instance.isContractSignedBySigner.call(documentHash, account_2)
+    assert(isContractSignedByAccount2, true, `Contract not signed by account ${account_2}`);
   });
 
   it('shouldn\'t sign a canceled digital contract', async () => {
@@ -93,23 +94,5 @@ contract('ContraktorSign', accounts => {
     } catch(err) {
       // nop
     }
-  });
-
-  it('should confirm that a signer is participating in a contract', async () => {
-    const instance = await deployContraktorSign();
-    await instance.signDigitalContract(documentHash, { from: account_1 });
-    await instance.signDigitalContract(documentHash, { from: account_2 });
-    const transactionResult = await instance.signerIsValid(documentHash, account_1, { from: account_2 });
-    const SignerIsValid = transactionResult.logs.find(log => log.event === 'SignerIsValid');
-    assert.equal(SignerIsValid.args._valid, true, "Signer should be valid for the contract");
-  });
-
-  it('should confirm that a signer isn\t participating in a contract', async () => {
-    const instance = await deployContraktorSign();
-    await instance.signDigitalContract(documentHash, { from: account_1 });
-    await instance.signDigitalContract(documentHash, { from: account_2 });
-    const transactionResult = await instance.signerIsValid(documentHash, account_3, { from: account_2 });
-    const SignerIsValid = transactionResult.logs.find(log => log.event === 'SignerIsValid');
-    assert.equal(SignerIsValid.args._valid, false, "Signer should be invalid for the contract");
   });
 });
