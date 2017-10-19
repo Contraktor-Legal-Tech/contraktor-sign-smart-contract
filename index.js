@@ -71,14 +71,19 @@ router.post('/digital_contract', async (req, res) => {
       throw Error('Account is required');
     }
 
-    const contractHash = req.body.contractHash;
-    const from = req.body.account;
+    if (!req.body.signers) {
+      throw Error('Signers array is required');
+    }
 
     console.log('request body:', req.body);
 
+    const contractHash = req.body.contractHash;
+    const from = req.body.account;
+    const signers = req.body.signers;
+
     const instance = await ContraktorSign.deployed();
 
-    const result = await instance.newDigitalContract(contractHash, { from });
+    const result = await instance.newDigitalContract(contractHash, signers, { from });
     res.status(201).json({ result });
   } catch (error) {
     console.error(error);
