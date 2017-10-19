@@ -83,7 +83,7 @@ router.post('/digital_contract', async (req, res) => {
 
     const instance = await ContraktorSign.deployed();
 
-    const result = await instance.newDigitalContract(contractHash, signers, { from });
+    const result = await instance.newDigitalContract(contractHash, signers, { from, gas: 1000000 });
     res.status(201).json({ result });
   } catch (error) {
     console.error(error);
