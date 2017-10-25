@@ -7,13 +7,10 @@
     "test": "test"
   },
   "scripts": {
-    "start": "node index.js",
     "truffle": "truffle",
     "build": "truffle build",
     "console": "truffle console",
-    "testrpc": "testrpc -d -m 1 --debug",
-    "solcjs": "solcjs",
-    "dev-chain": "rimraf dev-chain && geth --dev --gasprice 0 --rpc --rpcport 8545 --rpcapi=\"db,eth,net,web3,personal,miner\" --datadir \"dev-chain\" --preload bootstrap_geth.js console",
+    "testrpc": "rimraf dev-chain && geth --dev --gasprice 0 -ipcdisable --rpc --rpcport 8545 --rpcapi=\"db,eth,net,web3,personal,miner\" --datadir \"dev-chain\" --preload ./bootstrap_geth.js console",
     "compile": "truffle compile",
     "migrate": "truffle migrate",
     "test": "NODE_ENV=test TEST_TYPE=contract truffle test",
@@ -22,16 +19,9 @@
   "author": "Contraktor Legal Tech",
   "license": "All Rights Reserved",
   "devDependencies": {
-    "ethereumjs-testrpc": "^4.1.3",
-    "express": "^4.16.2",
-    "mocha": "^4.0.1",
     "rimraf": "^2.6.2",
     "sha.js": "^2.4.9",
-    "solc": "^0.4.17",
-    "supertest": "^3.0.0",
     "truffle": "^3.4.11",
-    "truffle-contract": "^3.0.0",
-    "web3": "^1.0.0-beta.23",
-    "zeppelin-solidity": "^1.3.0"
+    "web3": "^1.0.0-beta.23"
   }
 }

@@ -1,5 +1,3 @@
-if (process.env.TEST_TYPE !== 'contract') return;
-
 const shajs = require('sha.js');
 const ContraktorSign = artifacts.require('./ContraktorSign.sol');
 
