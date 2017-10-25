@@ -18,10 +18,22 @@ contract('ContraktorSign', accounts => {
   });
 
   const deployContraktorSign = async () => {
-    console.log('documentHash', documentHash);
     const instance = await ContraktorSign.deployed();
     await instance.newDigitalContract(documentHash, othersAccounts);
     return instance;
+  }
+
+  const assertEventFired = (transactionResult, eventName) => {
+    const event = transactionResult.logs.find(log => log.event === eventName);
+    assert.equal(!!event, true, `Event ${eventName} didn't happened`);
+  }
+
+  const assertTransaction = (transactionResult) => {
+    assert(transactionResult.receipt.status, "0x1", "Transaction failed");
+  }
+
+  const assertTransactionFailed = (transactionResult) => {
+    assert(transactionResult.receipt.status, "0x0", "Transaction worked");
   }
 
   it('should deploy ContraktorSign with success', async () => {
@@ -33,64 +45,67 @@ contract('ContraktorSign', accounts => {
   it('should add a new digital contract to ContraktorSign', async () => {
     const instance = await ContraktorSign.deployed();
     const transactionResult = await instance.newDigitalContract(documentHash, othersAccounts);
-    const newDigitalContractFound = transactionResult.logs.find(log => log.event === 'DigitalContractAdded');
-    assert.equal(!!newDigitalContractFound, true, "New DigitalContract isn't executed");
+    assertTransaction(transactionResult);
+    assertEventFired(transactionResult, 'AddingDigitalContract');
+    assertEventFired(transactionResult, 'DigitalContractAdded');
   });
 
   it('should cancel a digital contract', async () => {
     const instance = await deployContraktorSign();
-    await instance.cancelDigitalContract(documentHash);
-    const transactionResult = await instance.contractIsCanceled.call(documentHash);
-    assert(transactionResult, true);
+    const transactionResult = await instance.cancelDigitalContract(documentHash);
+    assertTransaction(transactionResult);
+    assertEventFired(transactionResult, 'DigitalContractCanceled');
+    const isCanceled = await instance.contractIsCanceled.call(documentHash);
+    assert.equal(isCanceled, true, "New Digital Contract cant be canceled");
   });
 
-  it('shouldn\'t new digtal contract been completed', async () => {
+  it('shouldn\'t new digital contract been completed', async () => {
     const instance = await deployContraktorSign();
     const isCompleted = await instance.contractIsCompleted.call(documentHash);
-    assert.equal(isCompleted, false, "New DigitalContract shouldn't be signed");
+    assert.equal(isCompleted, false, "New Digital Contract shouldn't be signed");
   });
 
   it('should sign digital contract for all signers', async () => {
     const instance = await deployContraktorSign();
-    await instance.signDigitalContract(documentHash, { from: account_1 });
-    await instance.signDigitalContract(documentHash, { from: account_2 });
-    const isContractSignedByAccount1 = await instance.isContractSignedBySigner.call(documentHash, account_1)
-    assert(isContractSignedByAccount1, true, `Contract not signed by account ${account_1}`);
-    const isContractSignedByAccount2 = await instance.isContractSignedBySigner.call(documentHash, account_2)
-    assert(isContractSignedByAccount2, true, `Contract not signed by account ${account_2}`);
+
+    let transactionResult = await instance.signDigitalContract(documentHash, { from: account_1 });
+    assertTransaction(transactionResult);
+    assertEventFired(transactionResult, 'DigitalContractSigned');
+
+    transactionResult = await instance.signDigitalContract(documentHash, { from: account_2 });
+    assertTransaction(transactionResult);
+    assertEventFired(transactionResult, 'DigitalContractSigned');
+    assertEventFired(transactionResult, 'DigitalContractCompleted');
+
+    let event = await instance.isContractSignedBySigner.call(documentHash, account_1)
+    assert(event, true, `Contract not signed by account ${account_1}`);
+
+    event = await instance.isContractSignedBySigner.call(documentHash, account_2)
+    assert(event, true, `Contract not signed by account ${account_2}`);
   });
 
   it('shouldn\'t sign a canceled digital contract', async () => {
     const instance = await deployContraktorSign();
-    await instance.cancelDigitalContract(documentHash);
+    let transactionResult = await instance.cancelDigitalContract(documentHash);
+    assertTransaction(transactionResult);
+    assertEventFired(transactionResult, 'DigitalContractCanceled');
 
-    try {
-      await instance.signDigitalContract(documentHash, { from: account_1 });
-    } catch(err) {
-      // nop
-    }
+    transactionResult = await instance.signDigitalContract(documentHash, { from: account_1 });
+    assertTransactionFailed(transactionResult);
   });
 
   it('shouldn\'t cancel a canceled digital contract', async () => {
     const instance = await deployContraktorSign();
     await instance.cancelDigitalContract(documentHash);
-
-    try {
-      await instance.cancelDigitalContract(documentHash);
-    } catch(err) {
-      // nop
-    }
+    let transactionResult = await instance.cancelDigitalContract(documentHash);
+    assertTransactionFailed(transactionResult)
   });
 
   it('shouldn\'t sign a completed digital contract', async () => {
     const instance = await deployContraktorSign();
     await instance.signDigitalContract(documentHash, { from: account_1 });
     await instance.signDigitalContract(documentHash, { from: account_2 });
-
-    try {
-      await instance.signDigitalContract(documentHash, { from: account_2 });
-    } catch(err) {
-      // nop
-    }
+    let transactionResult = await instance.signDigitalContract(documentHash, { from: account_2 });
+    assertTransactionFailed(transactionResult)
   });
 });

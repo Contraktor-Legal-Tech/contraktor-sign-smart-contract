@@ -17,17 +17,6 @@ contract ContraktorSign is Ownable, Destructible {
   string constant public VERSION = "1.0.0";
   string constant public NAME = "ContraktorSign";
 
-  // Error codes
-  enum Errors {
-    CONTRACT_EXISTS,      // Digital document hash already exists
-    CONTRACT_DONT_EXISTS, // Digital document hash doesn't exist in the
-    NO_SIGNERS,           // No signers passed
-    CONTRACT_COMPLETED,   // Contract is completed with all signatures
-    CONTRACT_CANCELED,    // Contract is canceld and cannot be used anymore
-    INVALID_SIGNER,       // Bad signer added
-    SIGNER_SIGNED         // Signer already signed the contract
-  }
-
   /**
    * Structs
    */
@@ -52,10 +41,10 @@ contract ContraktorSign is Ownable, Destructible {
 
     // Variables to control the state of the digital contract
     uint createdAt;
-    uint completedAt;
     uint canceledAt;
+    uint completedAt;
 
-    address[] signersList;
+    uint signersCount;
 
     // All signers of this contract
     mapping(address => Signer) signers;
@@ -71,17 +60,6 @@ contract ContraktorSign is Ownable, Destructible {
   *  Events
   */
 
-  // Some error happened
-  event LogError(
-    uint8 _errorId
-  );
-
-  // Some error happend
-  event LogError(
-    uint8 _errorId,
-    bytes32 _documentHash
-  );
-
   // Contract is about to be processed
   event AddingDigitalContract(
     bytes32 _documentHash,
@@ -93,20 +71,30 @@ contract ContraktorSign is Ownable, Destructible {
   event DigitalContractAdded(
     bytes32 _documentHash,
     string _documentDigest,
-    address[] _signers
+    address[] _signers,
+    uint _createdAt
   );
 
   // Digital contract signed by a party account
   event DigitalContractSigned(
     bytes32 _documentHash,
     string _documentDigest,
-    address _signer
+    address _signer,
+    uint _signedAt
+  );
+
+  // Digital contract is completed
+  event DigitalContractCompleted(
+    bytes32 _documentHash,
+    string _documentDigest,
+    uint _completedAt
   );
 
   // Digital contract canceled
   event DigitalContractCanceled(
     bytes32 _documentHash,
-    string _documentDigest
+    string _documentDigest,
+    uint _canceledAt
   );
 
   // Digital contract signer is valid test
@@ -129,7 +117,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Check if no previous contract exists
   modifier noContractShouldExists() {
     if (contracts[documentHash].isValid) {
-      LogError(uint8(Errors.CONTRACT_EXISTS));
       revert();
     }
     _;
@@ -138,7 +125,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Check if signers is greater than one
   modifier requireSigners(address[] _signers) {
     if (_signers.length == 0) {
-      LogError(uint8(Errors.NO_SIGNERS));
       revert();
     }
     _;
@@ -147,7 +133,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Check if contract previous exists
   modifier contractExists() {
     if (!contracts[documentHash].isValid) {
-      LogError(uint8(Errors.CONTRACT_DONT_EXISTS));
       revert();
     }
     _;
@@ -156,7 +141,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Check if contract isn't completed
   modifier contractIsntCompleted() {
     if (contracts[documentHash].completedAt != 0) {
-      LogError(uint8(Errors.CONTRACT_COMPLETED));
       revert();
     }
     _;
@@ -165,7 +149,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Check if contract isn't canceled
   modifier contractIsntCanceled() {
     if (contracts[documentHash].canceledAt != 0) {
-      LogError(uint8(Errors.CONTRACT_CANCELED));
       revert();
     }
     _;
@@ -174,7 +157,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Check if signer already signed the contract
   modifier signerSigned() {
     if (contracts[documentHash].signers[msg.sender].signedAt != 0) {
-      LogError(uint8(Errors.SIGNER_SIGNED));
       revert();
     }
     _;
@@ -194,12 +176,11 @@ contract ContraktorSign is Ownable, Destructible {
     noContractShouldExists() requireSigners(_signers)
   {
     AddingDigitalContract(documentHash, _documentDigest, _signers);
-    contracts[documentHash] = DigitalContract(documentHash, true, block.timestamp, 0, 0, _signers);
+    contracts[documentHash] = DigitalContract(documentHash, true, block.timestamp, 0, 0, uint8(_signers.length));
 
     // Adding each signer by public address of the signer
     for (uint i = 0; i < _signers.length; i++) {
       if (_signers[i] == 0x0) {
-        LogError(uint8(Errors.INVALID_SIGNER), documentHash);
         revert();
       }
 
@@ -207,7 +188,7 @@ contract ContraktorSign is Ownable, Destructible {
       contracts[documentHash].signers[_signers[i]] = Signer(0);
     }
 
-    DigitalContractAdded(documentHash, _documentDigest, _signers);
+    DigitalContractAdded(documentHash, _documentDigest, _signers,  block.timestamp);
   }
 
   /**
@@ -220,7 +201,7 @@ contract ContraktorSign is Ownable, Destructible {
   {
     // Mark the block timestamp indicating canceled == true
     contracts[documentHash].canceledAt = block.timestamp;
-    DigitalContractCanceled(documentHash, _documentDigest);
+    DigitalContractCanceled(documentHash, _documentDigest,  block.timestamp);
   }
 
   /**
@@ -233,10 +214,13 @@ contract ContraktorSign is Ownable, Destructible {
     contractIsntCanceled() signerSigned()
   {
     contracts[documentHash].signers[msg.sender].signedAt = block.timestamp;
-    delete contracts[documentHash].signersList[0];
+    contracts[documentHash].signersCount--;
 
-    if (contracts[documentHash].signersList.length == 0) {
+    DigitalContractSigned(documentHash, _documentDigest, msg.sender, block.timestamp);
+
+    if (contracts[documentHash].signersCount == 0) {
       contracts[documentHash].completedAt = block.timestamp;
+      DigitalContractCompleted(documentHash, _documentDigest, block.timestamp);
     }
   }
 
