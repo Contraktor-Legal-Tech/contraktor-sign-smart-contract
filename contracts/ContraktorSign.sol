@@ -176,7 +176,7 @@ contract ContraktorSign is Ownable, Destructible {
     noContractShouldExists() requireSigners(_signers)
   {
     AddingDigitalContract(documentHash, _documentDigest, _signers);
-    contracts[documentHash] = DigitalContract(documentHash, true, block.timestamp, 0, 0, uint8(_signers.length));
+    contracts[documentHash] = DigitalContract(documentHash, true, block.timestamp, 0, 0, _signers.length);
 
     // Adding each signer by public address of the signer
     for (uint i = 0; i < _signers.length; i++) {
