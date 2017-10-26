@@ -53,9 +53,6 @@ contract ContraktorSign is Ownable, Destructible {
   // All digital contracts managed by Contraktor
   mapping(bytes32 => DigitalContract) public contracts;
 
-  // Keeps the current hash calc
-  bytes32 documentHash;
-
   /*
   *  Events
   */
@@ -63,14 +60,12 @@ contract ContraktorSign is Ownable, Destructible {
   // Contract is about to be processed
   event AddingDigitalContract(
     bytes32 _documentHash,
-    string _documentDigest,
     address[] _signers
   );
 
   // Digital contract added and finish the transaction
   event DigitalContractAdded(
     bytes32 _documentHash,
-    string _documentDigest,
     address[] _signers,
     uint _createdAt
   );
@@ -78,7 +73,6 @@ contract ContraktorSign is Ownable, Destructible {
   // Digital contract signed by a party account
   event DigitalContractSigned(
     bytes32 _documentHash,
-    string _documentDigest,
     address _signer,
     uint _signedAt
   );
@@ -86,14 +80,12 @@ contract ContraktorSign is Ownable, Destructible {
   // Digital contract is completed
   event DigitalContractCompleted(
     bytes32 _documentHash,
-    string _documentDigest,
     uint _completedAt
   );
 
   // Digital contract canceled
   event DigitalContractCanceled(
     bytes32 _documentHash,
-    string _documentDigest,
     uint _canceledAt
   );
 
@@ -108,15 +100,9 @@ contract ContraktorSign is Ownable, Destructible {
    * Modifiers
    */
 
-  // Generate the document hash using keccak256
-  modifier calcKeccak256(string _documentDigest) {
-    documentHash = keccak256(_documentDigest);
-    _;
-  }
-
   // Check if no previous contract exists
-  modifier noContractShouldExists() {
-    if (contracts[documentHash].isValid) {
+  modifier noContractShouldExists(bytes32 _documentHash) {
+    if (contracts[_documentHash].isValid) {
       revert();
     }
     _;
@@ -131,32 +117,32 @@ contract ContraktorSign is Ownable, Destructible {
   }
 
   // Check if contract previous exists
-  modifier contractExists() {
-    if (!contracts[documentHash].isValid) {
+  modifier contractExists(bytes32 _documentHash) {
+    if (!contracts[_documentHash].isValid) {
       revert();
     }
     _;
   }
 
   // Check if contract isn't completed
-  modifier contractIsntCompleted() {
-    if (contracts[documentHash].completedAt != 0) {
+  modifier contractIsntCompleted(bytes32 _documentHash) {
+    if (contracts[_documentHash].completedAt != 0) {
       revert();
     }
     _;
   }
 
   // Check if contract isn't canceled
-  modifier contractIsntCanceled() {
-    if (contracts[documentHash].canceledAt != 0) {
+  modifier contractIsntCanceled(bytes32 _documentHash) {
+    if (contracts[_documentHash].canceledAt != 0) {
       revert();
     }
     _;
   }
 
   // Check if signer already signed the contract
-  modifier signerSigned() {
-    if (contracts[documentHash].signers[msg.sender].signedAt != 0) {
+  modifier signerSigned(bytes32 _documentHash) {
+    if (contracts[_documentHash].signers[msg.sender].signedAt != 0) {
       revert();
     }
     _;
@@ -168,15 +154,14 @@ contract ContraktorSign is Ownable, Destructible {
 
   /**
    * @dev creates a new digital contract with checksum hash and add signers
-   * @param _documentDigest checksum of the document to be added
+   * @param _documentHash checksum of the document to be added
    * @param _signers address of the accounts to sign the digital contract
    */
-  function newDigitalContract(string _documentDigest, address[] _signers) public
-    onlyOwner calcKeccak256(_documentDigest)
-    noContractShouldExists() requireSigners(_signers)
+  function newDigitalContract(bytes32 _documentHash, address[] _signers) public
+    onlyOwner noContractShouldExists(_documentHash) requireSigners(_signers)
   {
-    AddingDigitalContract(documentHash, _documentDigest, _signers);
-    contracts[documentHash] = DigitalContract(documentHash, true, block.timestamp, 0, 0, _signers.length);
+    AddingDigitalContract(_documentHash, _signers);
+    contracts[_documentHash] = DigitalContract(_documentHash, true, block.timestamp, 0, 0, _signers.length);
 
     // Adding each signer by public address of the signer
     for (uint i = 0; i < _signers.length; i++) {
@@ -185,42 +170,41 @@ contract ContraktorSign is Ownable, Destructible {
       }
 
       // Adding signer to the contract signers map
-      contracts[documentHash].signers[_signers[i]] = Signer(0);
+      contracts[_documentHash].signers[_signers[i]] = Signer(0);
     }
 
-    DigitalContractAdded(documentHash, _documentDigest, _signers,  block.timestamp);
+    DigitalContractAdded(_documentHash, _signers,  block.timestamp);
   }
 
   /**
    * @dev cancel a digital contract forever
-   * @param _documentDigest checksum of the document to be canceled
+   * @param _documentHash checksum of the document to be canceled
    */
-  function cancelDigitalContract(string _documentDigest) public
-    onlyOwner calcKeccak256(_documentDigest)
-    contractExists() contractIsntCompleted() contractIsntCanceled()
+  function cancelDigitalContract(bytes32 _documentHash) public
+    onlyOwner contractExists(_documentHash)
+    contractIsntCompleted(_documentHash) contractIsntCanceled(_documentHash)
   {
     // Mark the block timestamp indicating canceled == true
-    contracts[documentHash].canceledAt = block.timestamp;
-    DigitalContractCanceled(documentHash, _documentDigest,  block.timestamp);
+    contracts[_documentHash].canceledAt = block.timestamp;
+    DigitalContractCanceled(_documentHash,  block.timestamp);
   }
 
   /**
    * @dev account can sign the digital contract by the contract hash
-   * @param _documentDigest checksum of the document to be signed
+   * @param _documentHash checksum of the document to be signed
    */
-  function signDigitalContract(string _documentDigest) public
-    calcKeccak256(_documentDigest)
-    contractExists() contractIsntCompleted()
-    contractIsntCanceled() signerSigned()
+  function signDigitalContract(bytes32 _documentHash) public
+    contractExists(_documentHash) contractIsntCompleted(_documentHash)
+    contractIsntCanceled(_documentHash) signerSigned(_documentHash)
   {
-    contracts[documentHash].signers[msg.sender].signedAt = block.timestamp;
-    contracts[documentHash].signersCount--;
+    contracts[_documentHash].signers[msg.sender].signedAt = block.timestamp;
+    contracts[_documentHash].signersCount--;
 
-    DigitalContractSigned(documentHash, _documentDigest, msg.sender, block.timestamp);
+    DigitalContractSigned(_documentHash, msg.sender, block.timestamp);
 
-    if (contracts[documentHash].signersCount == 0) {
-      contracts[documentHash].completedAt = block.timestamp;
-      DigitalContractCompleted(documentHash, _documentDigest, block.timestamp);
+    if (contracts[_documentHash].signersCount == 0) {
+      contracts[_documentHash].completedAt = block.timestamp;
+      DigitalContractCompleted(_documentHash, block.timestamp);
     }
   }
 
@@ -230,45 +214,45 @@ contract ContraktorSign is Ownable, Destructible {
 
   /**
    * @dev checks if the signer is participating in an contract
-   * @param _documentDigest checksum of the document to be checked
+   * @param _documentHash checksum of the document to be checked
    * @param _signer account to be test if is a valid signer in the contract specified
    */
-  function isContractSignedBySigner(string _documentDigest, address _signer) public
-    calcKeccak256(_documentDigest) contractExists() constant returns (bool)
+  function isContractSignedBySigner(bytes32 _documentHash, address _signer) public
+    contractExists(_documentHash) constant returns (bool)
   {
-    return contracts[documentHash].signers[_signer].signedAt != 0;
+    return contracts[_documentHash].signers[_signer].signedAt != 0;
   }
 
   /**
    * @dev check if the digital contract is signed by all signers
-   * @param _documentDigest checksum of the document to check if is signed
+   * @param _documentHash checksum of the document to check if is signed
    * @return boolean indicating if the contract is signed
    */
-  function contractIsCompleted(string _documentDigest) public
-    calcKeccak256(_documentDigest) contractExists() constant returns (bool)
+  function contractIsCompleted(bytes32 _documentHash) public
+    contractExists(_documentHash) constant returns (bool)
   {
-    return contracts[documentHash].completedAt != 0;
+    return contracts[_documentHash].completedAt != 0;
   }
 
   /**
    * @dev check if the digital contract is canceled
-   * @param _documentDigest checksum of the document to check if is canceled
+   * @param _documentHash checksum of the document to check if is canceled
    * @return boolean indicating if the contract is canceled
    */
-  function contractIsCanceled(string _documentDigest)
-    calcKeccak256(_documentDigest) contractExists() constant returns (bool)
+  function contractIsCanceled(bytes32 _documentHash) public
+    contractExists(_documentHash) constant returns (bool)
   {
-    return contracts[documentHash].canceledAt != 0;
+    return contracts[_documentHash].canceledAt != 0;
   }
 
   /**
    * @dev returns the signed time of the contract in unix timestamp format
-   * @param _documentDigest checksum of the document to check the timestamp of completion
+   * @param _documentHash checksum of the document to check the timestamp of completion
    * @return uint with the unix timestamp of the completion of the document
    */
-  function contractSignedTime(string _documentDigest)
-    calcKeccak256(_documentDigest) contractExists() constant returns (uint)
+  function contractSignedTime(bytes32 _documentHash) public
+    contractExists(_documentHash) constant returns (uint)
   {
-    return contracts[documentHash].completedAt;
+    return contracts[_documentHash].completedAt;
   }
 }

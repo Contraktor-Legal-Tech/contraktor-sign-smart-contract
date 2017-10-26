@@ -13,7 +13,8 @@ contract('ContraktorSign', accounts => {
   const othersAccounts = [account_1, account_2];
 
   beforeEach((done) => {
-    documentHash = shajs('sha256').update(Math.random().toString()).digest('hex');
+    documentHash = `0x${shajs('sha256').update(Math.random().toString()).digest('hex')}`;
+    console.log(documentHash, documentHash.length);
     done();
   });
 
@@ -23,17 +24,17 @@ contract('ContraktorSign', accounts => {
     return instance;
   }
 
-  const assertEventFired = (transactionResult, eventName) => {
-    const event = transactionResult.logs.find(log => log.event === eventName);
+  const assertEventFired = ({ logs }, eventName) => {
+    const event = logs.find(log => log.event === eventName);
     assert.equal(!!event, true, `Event ${eventName} didn't happened`);
   }
 
-  const assertTransaction = (transactionResult) => {
-    assert(transactionResult.receipt.status, "0x1", "Transaction failed");
+  const assertTransaction = ({ receipt: { status } }) => {
+    assert.equal(status, '0x1', "Transaction failed");
   }
 
-  const assertTransactionFailed = (transactionResult) => {
-    assert(transactionResult.receipt.status, "0x0", "Transaction worked");
+  const assertTransactionFailed = ({ receipt: { status } }) => {
+    assert.equal(status, '0x0', "Transaction worked");
   }
 
   it('should deploy ContraktorSign with success', async () => {
