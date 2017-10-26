@@ -1,0 +1,113 @@
+{
+  "contract_name": "ContraktorSignKernel",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "contraktorSignStorage",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "destroy",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "name": "_signers",
+          "type": "address[]"
+        }
+      ],
+      "name": "newDigitalContract",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_recipient",
+          "type": "address"
+        }
+      ],
+      "name": "destroyAndSend",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_contraktorSignStorage",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b60405160208061041d833981016040528080519150505b5b5b60008054600160a060020a03191633600160a060020a03161790555b5b60018054600160a060020a031916600160a060020a0383161790555b505b6103ab806100726000396000f300606060405236156100755763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663073095c5811461007a57806383197ef0146100a95780638da5cb5b146100be5780639cba4e10146100ed578063f2fde38b14610143578063f5074f4114610164575b600080fd5b341561008557600080fd5b61008d610185565b604051600160a060020a03909116815260200160405180910390f35b34156100b457600080fd5b6100bc610194565b005b34156100c957600080fd5b61008d6101c0565b604051600160a060020a03909116815260200160405180910390f35b34156100f857600080fd5b6100bc600480359060446024803590810190830135806020818102016040519081016040528093929190818152602001838360200280828437509496506101cf95505050505050565b005b341561014e57600080fd5b6100bc600160a060020a03600435166102bb565b005b341561016f57600080fd5b6100bc600160a060020a0360043516610354565b005b600154600160a060020a031681565b60005433600160a060020a039081169116146101af57600080fd5b600054600160a060020a0316ff5b5b565b600054600160a060020a031681565b60015473__SignLibrary___________________________906386383c5390600160a060020a031684846040517c010000000000000000000000000000000000000000000000000000000063ffffffff8616028152600160a060020a0384166004820190815260248201849052606060448301908152909160640183818151815260200191508051906020019060200280838360005b8381101561027e5780820151818401525b602001610265565b5050505090500194505050505060006040518083038186803b15156102a257600080fd5b6102c65a03f415156102b357600080fd5b5050505b5050565b60005433600160a060020a039081169116146102d657600080fd5b600160a060020a03811615156102eb57600080fd5b600054600160a060020a0380831691167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b60005433600160a060020a0390811691161461036f57600080fd5b80600160a060020a0316ff5b5b505600a165627a7a723058204b76ccde450e7b171e4561f8dec959789e9a72e36e939c16cc430503786af4680029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1508988448147
+}

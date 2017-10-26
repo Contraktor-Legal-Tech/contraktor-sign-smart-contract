@@ -38,12 +38,12 @@ contract('ContraktorSign', accounts => {
   }
 
   it('should deploy ContraktorSign with success', async () => {
-    const instance = await deployContraktorSign();
+    const instance = await ContraktorSign.deployed();
     const name = await instance.NAME.call();
     assert.equal(name, 'ContraktorSign');
   });
 
-  it('should add a new digital contract to ContraktorSign', async () => {
+  it.only('should add a new digital contract to ContraktorSign', async () => {
     const instance = await ContraktorSign.deployed();
     const transactionResult = await instance.newDigitalContract(documentHash, othersAccounts);
     assertTransaction(transactionResult);

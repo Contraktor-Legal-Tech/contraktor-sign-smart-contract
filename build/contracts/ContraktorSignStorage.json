@@ -1,0 +1,108 @@
+{
+  "contract_name": "ContraktorSignStorage",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "name": "_digitalContract",
+          "type": "address"
+        }
+      ],
+      "name": "addDigitalContract",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_documentHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getDigitalContract",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "destroy",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_recipient",
+          "type": "address"
+        }
+      ],
+      "name": "destroyAndSend",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x60606040525b5b60008054600160a060020a03191633600160a060020a03161790555b5b5b6102d8806100336000396000f300606060405236156100755763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663788eca43811461007a57806378ede4801461009e57806383197ef0146100d05780638da5cb5b146100e5578063f2fde38b14610114578063f5074f4114610135575b600080fd5b341561008557600080fd5b61009c600435600160a060020a0360243516610156565b005b34156100a957600080fd5b6100b460043561018f565b604051600160a060020a03909116815260200160405180910390f35b34156100db57600080fd5b61009c6101ad565b005b34156100f057600080fd5b6100b46101d9565b604051600160a060020a03909116815260200160405180910390f35b341561011f57600080fd5b61009c600160a060020a03600435166101e8565b005b341561014057600080fd5b61009c600160a060020a0360043516610281565b005b6000828152600160205260409020805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5050565b600081815260016020526040902054600160a060020a03165b919050565b60005433600160a060020a039081169116146101c857600080fd5b600054600160a060020a0316ff5b5b565b600054600160a060020a031681565b60005433600160a060020a0390811691161461020357600080fd5b600160a060020a038116151561021857600080fd5b600054600160a060020a0380831691167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b60005433600160a060020a0390811691161461029c57600080fd5b80600160a060020a0316ff5b5b505600a165627a7a7230582025a6921752f0258d95290caf49be0dfaed55f56a21f75d1dce6537b363025d130029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1508988448147
+}
