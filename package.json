@@ -13,14 +13,14 @@
     "testrpc": "rimraf dev-chain && geth --dev --gasprice 0 -ipcdisable --rpc --rpcport 8545 --rpcapi=\"db,eth,net,web3,personal,miner\" --datadir \"dev-chain\" --preload ./bootstrap_geth.js console",
     "compile": "truffle compile",
     "migrate": "truffle migrate",
-    "test": "NODE_ENV=test TEST_TYPE=contract truffle test",
-    "test-api": "NODE_ENV=test TEST_TYPE=api mocha 'test/api_test.js' --timeout 60000"
+    "test": "truffle test"
   },
   "author": "Contraktor Legal Tech",
   "license": "All Rights Reserved",
   "devDependencies": {
     "rimraf": "^2.6.2",
     "sha.js": "^2.4.9",
-    "truffle": "^3.4.11"
+    "truffle": "^3.4.11",
+    "lodash": "^4.17.4"
   }
 }

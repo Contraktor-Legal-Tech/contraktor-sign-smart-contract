@@ -12,14 +12,14 @@ library SignLibrary {
 
     DigitalContract digitalContract = new DigitalContract(_documentHash);
 
-    for (uint i = 0; i < _signers.length; i++) {
-      assert(_signers[i] != 0x0);
+    // for (uint i = 0; i < _signers.length; i++) {
+    //   assert(_signers[i] != 0x0);
 
-      // Adding signer to the contract signers map
-      Signer signer = new Signer();
-      digitalContract.addSigner(address(signer));
-    }
+    //   // Adding signer to the contract signers map
+    //   Signer signer = new Signer();
+    //   digitalContract.addSigner(address(signer));
+    // }
 
-    contraktorSignStorage.addDigitalContract(_documentHash, digitalContract);
+    contraktorSignStorage.addDigitalContract(_documentHash, address(digitalContract));
   }
 }
