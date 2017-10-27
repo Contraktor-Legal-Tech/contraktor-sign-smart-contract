@@ -1,8 +1,10 @@
-const ContraktorSign = artifacts.require('./ContraktorSign.sol');
-const SignLibrary = artifacts.require('./SignLibrary.sol');
+const CKSignStorage = artifacts.require('./CKSignStorage.sol');
+const CKSignManager = artifacts.require('./CKSignManager.sol');
+const CKSignLibrary = artifacts.require('./CKSignLibrary.sol');
 
 module.exports = function(deployer) {
-  deployer.deploy(SignLibrary);
-  deployer.link(SignLibrary, ContraktorSign);
-  deployer.deploy(ContraktorSign);
+  deployer.deploy(CKSignStorage);
+  deployer.deploy(CKSignLibrary);
+  deployer.link(CKSignLibrary, CKSignManager);
+  deployer.deploy(CKSignManager);
 };
