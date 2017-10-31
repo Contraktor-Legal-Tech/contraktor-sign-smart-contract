@@ -1,0 +1,226 @@
+{
+  "contract_name": "CKSignKernel",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "ckSignStorageAddr",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "destroy",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "NAME",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_recipient",
+          "type": "address"
+        }
+      ],
+      "name": "destroyAndSend",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_ckSignStorageAddr",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "_signers",
+          "type": "address[]"
+        }
+      ],
+      "name": "AddingDigitalContract",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "_signers",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "name": "_createdAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "DigitalContractAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "_signer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "_signedAt",
+          "type": "int256"
+        }
+      ],
+      "name": "DigitalContractSigned",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "_completedAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "DigitalContractCompleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "_canceledAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "DigitalContractCanceled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_documentHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "_signer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "_valid",
+          "type": "bool"
+        }
+      ],
+      "name": "SignerIsValid",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b60405160208061039d833981016040528080519150505b5b5b60008054600160a060020a03191633600160a060020a03161790555b5b60018054600160a060020a031916600160a060020a0383161790555b505b61032b806100726000396000f300606060405236156100755763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416636fdc9138811461007a57806383197ef0146100a95780638da5cb5b146100be578063a3f4df7e146100ed578063f2fde38b14610178578063f5074f4114610199575b600080fd5b341561008557600080fd5b61008d6101ba565b604051600160a060020a03909116815260200160405180910390f35b34156100b457600080fd5b6100bc6101c9565b005b34156100c957600080fd5b61008d6101f5565b604051600160a060020a03909116815260200160405180910390f35b34156100f857600080fd5b610100610204565b60405160208082528190810183818151815260200191508051906020019080838360005b8381101561013d5780820151818401525b602001610124565b50505050905090810190601f16801561016a5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561018357600080fd5b6100bc600160a060020a036004351661023b565b005b34156101a457600080fd5b6100bc600160a060020a03600435166102d4565b005b600154600160a060020a031681565b60005433600160a060020a039081169116146101e457600080fd5b600054600160a060020a0316ff5b5b565b600054600160a060020a031681565b60408051908101604052600c81527f434b5369676e4b65726e656c0000000000000000000000000000000000000000602082015281565b60005433600160a060020a0390811691161461025657600080fd5b600160a060020a038116151561026b57600080fd5b600054600160a060020a0380831691167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b60005433600160a060020a039081169116146102ef57600080fd5b80600160a060020a0316ff5b5b505600a165627a7a723058204cfe0adb7dcaea3e2e5fc14f45f45657577ae5c107d8a8158ad22bb4575e0db70029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1509123841929
+}

@@ -1,0 +1,28 @@
+{
+  "nonce": "0x0000000000000042",
+  "timestamp": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "extraData": "0x0",
+  "gasLimit": "0x8000000",
+  "difficulty": "0x400",
+  "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x3333333333333333333333333333333333333333",
+  "alloc": {
+    "0xcbe83c39ef3729bed991c8dd85cffc096286f7a8": {
+      "balance": "100000000000000000000",
+      "password": "super-secure-passwd"
+    },
+    "0xa24bed3dbb80202cdcc85f4289c4b9eed6372a5f": {
+      "balance": "100000000000000000000",
+      "password": "super-secure-passwd"
+    },
+    "0x4c4e8e47180d34643d42849cf8fc1c67ee508563": {
+      "balance": "100000000000000000000",
+      "password": "super-secure-passwd"
+    },
+    "0x34e374b3e7afff4195932c5d86ec1bc7c0795e27": {
+      "balance": "100000000000000000000",
+      "password": "super-secure-passwd"
+    }
+  }
+}

@@ -1,98 +1,69 @@
-if (process.env.TEST_TYPE !== 'contract') return;
-
 const shajs = require('sha.js');
-const ContraktorSign = artifacts.require('./ContraktorSign.sol');
 
-const JSONLog = (log) => console.log(JSON.stringify(log, null, 2));
+// const CKSignManager = artifacts.require('./CKSignManager.sol');
+// const CKSignKernel = artifacts.require('./CKSignKernel.sol');
+const CKSignStorage = artifacts.require('./CKSignStorage.sol');
 
-contract('ContraktorSign', accounts => {
-  console.log('accounts', accounts);
+// const {
+//   log,
+//   JSONLog,
+//   assertTransaction,
+//   assertEventFired
+// } = require('./support');
 
-  let documentHash;
-  const account_1 = accounts[1];
-  const account_2 = accounts[2];
-  const account_3 = accounts[3];
-  const othersAccounts = [account_1, account_2];
+contract('CKSign Smart Contracts', accs => {
+  let CKSignManagerInstance;
+  let CKSignStorageInstance;
 
-  beforeEach((done) => {
-    documentHash = shajs('sha256').update(Math.random().toString()).digest('hex');
-    done();
+  beforeEach(async () => {
+    CKSignStorageInstance = await CKSignStorage.deployed();
+    log('CKSignStorage deployed at:', CKSignStorageInstance.address);
+
+    // CKSignManagerInstance = await CKSignManager.deployed(CKSignStorageInstance.address);
+    // log('CKSignManager deployed at:', CKSignManagerInstance.address);
   });
 
-  const deployContraktorSign = async () => {
-    console.log('documentHash', documentHash);
-    const instance = await ContraktorSign.deployed();
-    await instance.newDigitalContract(documentHash, othersAccounts);
-    return instance;
-  }
+  describe('CKSign', () => {
+    it('should deploy CKSign with success', async () => {
+      // const name = await CKSignManagerInstance.NAME.call();
+      // assert.equal(name, 'CKSign');
+    });
 
-  it('should deploy ContraktorSign with success', async () => {
-    const instance = await deployContraktorSign();
-    const name = await instance.NAME.call();
-    assert.equal(name, 'ContraktorSign');
+    // it('should upgrade with success', async () => {
+    //   const txResult = await CKSignManagerInstance.upgradeCKSignKernel({ from: accs[0] });
+    //   assertTransaction(txResult);
+    //   assertEventFired(txResult, 'CKSignKernelUpgraded');
+    // });
   });
 
-  it('should add a new digital contract to ContraktorSign', async () => {
-    const instance = await ContraktorSign.deployed();
-    const transactionResult = await instance.newDigitalContract(documentHash, othersAccounts);
-    const newDigitalContractFound = transactionResult.logs.find(log => log.event === 'DigitalContractAdded');
-    assert.equal(!!newDigitalContractFound, true, "New DigitalContract isn't executed");
-  });
+  // describe('CKSignKernel', () => {
+  //   let assetDigest;
+  //   let ckSignKernelInstance;
 
-  it('should cancel a digital contract', async () => {
-    const instance = await deployContraktorSign();
-    await instance.cancelDigitalContract(documentHash);
-    const transactionResult = await instance.contractIsCanceled.call(documentHash);
-    assert(transactionResult, true);
-  });
+  //   const owner = accs[0];
+  //   const parties = accs.slice(1, 3);
 
-  it('shouldn\'t new digtal contract been completed', async () => {
-    const instance = await deployContraktorSign();
-    const isCompleted = await instance.contractIsCompleted.call(documentHash);
-    assert.equal(isCompleted, false, "New DigitalContract shouldn't be signed");
-  });
+  //   beforeEach(async () => {
+  //     const sha3 = shajs('sha256')
+  //       .update(Math.random().toString())
+  //       .digest('hex');
 
-  it('should sign digital contract for all signers', async () => {
-    const instance = await deployContraktorSign();
-    await instance.signDigitalContract(documentHash, { from: account_1 });
-    await instance.signDigitalContract(documentHash, { from: account_2 });
-    const isContractSignedByAccount1 = await instance.isContractSignedBySigner.call(documentHash, account_1)
-    assert(isContractSignedByAccount1, true, `Contract not signed by account ${account_1}`);
-    const isContractSignedByAccount2 = await instance.isContractSignedBySigner.call(documentHash, account_2)
-    assert(isContractSignedByAccount2, true, `Contract not signed by account ${account_2}`);
-  });
+  //     assetDigest = `0x${sha3}`;
+  //     log('assetDigest:', assetDigest);
 
-  it('shouldn\'t sign a canceled digital contract', async () => {
-    const instance = await deployContraktorSign();
-    await instance.cancelDigitalContract(documentHash);
+  //     const address = await CKSignManagerInstance.ckSignKernel.call();
+  //     log('CkSignKernel at:', address);
+  //     ckSignKernelInstance = await CKSignKernel.at(address);
+  //   });
 
-    try {
-      await instance.signDigitalContract(documentHash, { from: account_1 });
-    } catch(err) {
-      // nop
-    }
-  });
+  //   it('should deploy CKSignKernel with success', async () => {
+  //     const name = await ckSignKernelInstance.NAME.call();
+  //     assert.equal(name, 'CKSignKernel');
+  //   });
 
-  it('shouldn\'t cancel a canceled digital contract', async () => {
-    const instance = await deployContraktorSign();
-    await instance.cancelDigitalContract(documentHash);
-
-    try {
-      await instance.cancelDigitalContract(documentHash);
-    } catch(err) {
-      // nop
-    }
-  });
-
-  it('shouldn\'t sign a completed digital contract', async () => {
-    const instance = await deployContraktorSign();
-    await instance.signDigitalContract(documentHash, { from: account_1 });
-    await instance.signDigitalContract(documentHash, { from: account_2 });
-
-    try {
-      await instance.signDigitalContract(documentHash, { from: account_2 });
-    } catch(err) {
-      // nop
-    }
-  });
+  //   it('should sign an asset with success', async () => {
+  //     const txResult = await ckSignKernelInstance.newDigitalContract(assetDigest, parties, { from: owner });
+  //     assertTransaction(txResult);
+  //   });
+  // });
 });
